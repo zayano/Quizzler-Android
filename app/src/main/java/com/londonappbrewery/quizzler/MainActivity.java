@@ -1,5 +1,6 @@
 package com.londonappbrewery.quizzler;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,14 +14,14 @@ import java.util.Random;
 
 public class MainActivity extends Activity {
 
-    // TODO: Declare constants here
-
-
     // TODO: Declare member variables here:
     Button mTrueButton;
     Button mFalseButton;
+    TextView mScoreTextView;
     TextView mQuestionTextView;
+    ProgressBar mProgressBar;
     int mIndex;
+    int mScore;
     int mQuestion;
 
     // TODO: Uncomment to create question bank
@@ -40,7 +41,8 @@ public class MainActivity extends Activity {
             new TrueFalse(R.string.question_13, true)
     };
 
-    int[] myIntArray = new int[]{2, 4, 6};
+    // TODO: Declare constants here
+    final int PROGRESS_BAR_INCREMENT = (int) Math.ceil(100.0 / mQuestionBank.length);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,8 @@ public class MainActivity extends Activity {
         mTrueButton = findViewById(R.id.true_button);
         mFalseButton = findViewById(R.id.false_button);
         mQuestionTextView = findViewById(R.id.question_text_view);
+        mScoreTextView = findViewById(R.id.score);
+        mProgressBar = findViewById(R.id.progress_bar);
 
         mQuestionTextView.setText("Birds are Dinosaurs");
 
@@ -74,16 +78,20 @@ public class MainActivity extends Activity {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateQuestion() {
         mIndex = (mIndex + 1) % mQuestionBank.length;
         mQuestion = mQuestionBank[mIndex].getmQuestionID();
         mQuestionTextView.setText(mQuestion);
+        mProgressBar.incrementProgressBy(PROGRESS_BAR_INCREMENT);
+        mScoreTextView.setText("Score" + mScore + "/" + mQuestionBank.length);
     }
     private void checkAnswer(boolean userSelection) {
         boolean correctAnswer = mQuestionBank[mIndex].ismAnswer();
 
         if (userSelection == correctAnswer) {
             Toast.makeText(getApplicationContext(), R.string.correct_toast, Toast.LENGTH_SHORT).show();
+            mScore = mScore + 1;
         } else {
             Toast.makeText(getApplicationContext(), R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
         }
