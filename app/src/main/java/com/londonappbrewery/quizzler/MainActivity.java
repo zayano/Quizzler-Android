@@ -2,6 +2,8 @@ package com.londonappbrewery.quizzler;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -81,6 +83,21 @@ public class MainActivity extends Activity {
     @SuppressLint("SetTextI18n")
     private void updateQuestion() {
         mIndex = (mIndex + 1) % mQuestionBank.length;
+
+        if (mIndex == 0) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Game Over");
+            alert.setCancelable(false);
+            alert.setMessage("You scored " + mScore + " points!");
+            alert.setPositiveButton("Close Application", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            alert.show();
+        }
+
         mQuestion = mQuestionBank[mIndex].getmQuestionID();
         mQuestionTextView.setText(mQuestion);
         mProgressBar.incrementProgressBy(PROGRESS_BAR_INCREMENT);
